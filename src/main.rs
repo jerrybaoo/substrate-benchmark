@@ -8,7 +8,6 @@ use subxt_signer::sr25519::{dev, Keypair, PublicKey};
 
 use account::generate_bench_key_pairs;
 
-
 #[cfg(feature = "substrate")]
 #[subxt::subxt(runtime_metadata_path = "metadata/substrate_metadata.scale")]
 pub mod substrate {}
