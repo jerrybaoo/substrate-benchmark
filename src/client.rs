@@ -126,7 +126,10 @@ impl Client {
         let mut first_tx_process: Option<TxProgress<T, C>> = None;
         let mut last_tx_process: Option<TxProgress<T, C>> = None;
 
-        let begin_send = SystemTime::now().duration_since(UNIX_EPOCH).expect("get system").as_millis() as u64;
+        let begin_send = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("get system")
+            .as_millis() as u64;
         info!("begin send transaction {}", begin_send);
         {
             let mut metric = self.metric.lock().await;
@@ -160,8 +163,15 @@ impl Client {
                 }
             }
         }
-        let end_send = SystemTime::now().duration_since(UNIX_EPOCH).expect("get system").as_millis() as u64;
-        info!("end send transaction {}, send txs duration: {}s", end_send, Duration::from_millis(end_send - begin_send).as_secs());
+        let end_send = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("get system")
+            .as_millis() as u64;
+        info!(
+            "end send transaction {}, send txs duration: {}s",
+            end_send,
+            Duration::from_millis(end_send - begin_send).as_secs()
+        );
         info!("has successfully submit txs, num {}", num);
 
         let first_tx_process = first_tx_process.unwrap();
@@ -169,7 +179,6 @@ impl Client {
 
         match first_tx_process.wait_for_finalized().await {
             Ok(res) => {
-                info!("last tx finalize block at {:#?}", res.block_hash());
                 let mut metric = self.metric.lock().await;
                 let include_block_hash = H256::from_slice(res.block_hash().as_ref());
                 metric.set_begin_block(include_block_hash)
@@ -181,7 +190,10 @@ impl Client {
             Ok(res) => {
                 info!("last tx finalize block at {:#?}", res.block_hash());
                 let mut metric = self.metric.lock().await;
-                let finalize_end = SystemTime::now().duration_since(UNIX_EPOCH).expect("get system").as_millis() as u64;
+                let finalize_end = SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .expect("get system")
+                    .as_millis() as u64;
 
                 let latest_tx_finalize_hash = H256::from_slice(res.block_hash().as_ref());
                 metric.set_finalize_block(latest_tx_finalize_hash);
@@ -249,7 +261,7 @@ impl Client {
                 "get current block timestamp should work",
             ))
     }
-
+    #[allow(dead_code)]
     async fn get_current_block(&self) -> Result<H256> {
         let hash = self.api.blocks().at_latest().await?.hash();
         Ok(hash)
@@ -263,7 +275,7 @@ impl Client {
         let end_block_hash = metric.last_tx_finalize_block.unwrap();
         let total_tx = metric.total_tx;
 
-        let begin_time = metric.begin_send; 
+        let begin_time = metric.begin_send;
         let finalize_time = metric.finalize_end;
         // let begin_time = self.get_block_timestamp(begin_block_hash).await?;
         //let finalize_time = self.get_block_timestamp(end_block_hash).await?;

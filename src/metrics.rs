@@ -16,13 +16,13 @@ impl Metrics {
         }
     }
 
-    pub fn set_begin_timestamp(&mut self, begin_timestamp: u64){
-        if self.begin_send == 0{
+    pub fn set_begin_timestamp(&mut self, begin_timestamp: u64) {
+        if self.begin_send == 0 {
             self.begin_send = begin_timestamp
         }
     }
 
-    pub fn set_end_timestamp(&mut self, end_timestamp: u64){
+    pub fn set_end_timestamp(&mut self, end_timestamp: u64) {
         self.finalize_end = end_timestamp
     }
 

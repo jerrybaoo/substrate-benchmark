@@ -1,3 +1,5 @@
+use std::env;
+
 use anyhow::Result;
 use log::debug;
 use subxt::{OnlineClient, SubstrateConfig};
@@ -25,13 +27,24 @@ const TRANSFER_AMOUNT: u128 = 1000;
 async fn main() -> Result<()> {
     env_logger::init();
 
+    // default account number is 3.
+    let mut account_num: u32 = 3;
+
+    let args: Vec<String> = env::args().collect();
+    for item in args.iter() {
+        _ = item.parse::<u32>().and_then(|n| {
+            account_num = n;
+            Ok(())
+        });
+    }
+
     let url = "ws://127.0.0.1:9944";
 
     let client = Client::new(url).await?;
 
     let from = dev::alice();
-    let sender_key_pairs = generate_bench_key_pairs("sender", 10)?;
-    let receiver_key_pairs = generate_bench_key_pairs("receiver", 10)?;
+    let sender_key_pairs = generate_bench_key_pairs("sender", account_num)?;
+    let receiver_key_pairs = generate_bench_key_pairs("receiver", account_num)?;
 
     let sender_pks = sender_key_pairs
         .iter()
@@ -46,33 +59,18 @@ async fn main() -> Result<()> {
     tokio::spawn(monitor_best_block(url.to_string()));
     tokio::spawn(monitor_finalize_block(url.to_string()));
 
-    futures::future::join_all([
-        client.batch_balance_transfer(
-            &sender_key_pairs[0],
-            receiver_key_pairs[0].public_key(),
+    let mut transfer_task = Vec::new();
+
+    for i in 0..account_num{
+        transfer_task.push(client.batch_balance_transfer(
+            &sender_key_pairs[i as usize],
+            receiver_key_pairs[i as usize].public_key(),
             20000,
             TRANSFER_AMOUNT,
-        ),
-        client.batch_balance_transfer(
-            &sender_key_pairs[1],
-            receiver_key_pairs[1].public_key(),
-            20000,
-            TRANSFER_AMOUNT,
-        ),
-        client.batch_balance_transfer(
-            &sender_key_pairs[2],
-            receiver_key_pairs[2].public_key(),
-            20000,
-            TRANSFER_AMOUNT,
-        ),
-        client.batch_balance_transfer(
-            &sender_key_pairs[3],
-            receiver_key_pairs[3].public_key(),
-            20000,
-            TRANSFER_AMOUNT,
-        ),
-    ])
-    .await;
+        ));
+    }
+
+    futures::future::join_all(transfer_task).await;
 
     client.report().await?;
 
