@@ -1,8 +1,7 @@
 use anyhow::Result;
-use log::info;
+use log::debug;
 use subxt::{OnlineClient, SubstrateConfig};
 use subxt_signer::sr25519::{dev, PublicKey};
-use tokio::time::{sleep, Duration};
 
 #[cfg(feature = "substrate")]
 #[subxt::subxt(runtime_metadata_path = "metadata/substrate_metadata.scale")]
@@ -45,6 +44,7 @@ async fn main() -> Result<()> {
         .await?;
 
     tokio::spawn(monitor_best_block(url.to_string()));
+    tokio::spawn(monitor_finalize_block(url.to_string()));
 
     futures::future::join_all([
         client.batch_balance_transfer(
@@ -65,15 +65,41 @@ async fn main() -> Result<()> {
             20000,
             TRANSFER_AMOUNT,
         ),
+        client.batch_balance_transfer(
+            &sender_key_pairs[3],
+            receiver_key_pairs[3].public_key(),
+            20000,
+            TRANSFER_AMOUNT,
+        ),
     ])
     .await;
 
-    sleep(Duration::from_secs(24)).await;
+    client.report().await?;
 
     Ok(())
 }
 
+// Only display in debug mode. Maybe only start this task in debug mode.
 pub async fn monitor_best_block(url: String) -> Result<()> {
+    let api = OnlineClient::<SubstrateConfig>::from_url(url).await?;
+
+    let mut blocks_sub = api.blocks().subscribe_best().await?;
+
+    while let Some(block) = blocks_sub.next().await {
+        let block = block?;
+
+        let block_number = block.header().number;
+        let block_hash = block.hash();
+
+        debug!(
+            "#best.. Block #{block_number}, Hash: {block_hash}, Extrinsics size: {}",
+            block.extrinsics().await?.len()
+        );
+    }
+    Ok(())
+}
+
+pub async fn monitor_finalize_block(url: String) -> Result<()> {
     let api = OnlineClient::<SubstrateConfig>::from_url(url).await?;
 
     let mut blocks_sub = api.blocks().subscribe_finalized().await?;
@@ -84,7 +110,10 @@ pub async fn monitor_best_block(url: String) -> Result<()> {
         let block_number = block.header().number;
         let block_hash = block.hash();
 
-        info!("Block #{block_number}, Hash: {block_hash},Extrinsics size: {}", block.extrinsics().await?.len());
+        debug!(
+            "#finalize .. Block #{block_number}, Hash: {block_hash}, Extrinsics size: {}",
+            block.extrinsics().await?.len()
+        );
     }
     Ok(())
 }

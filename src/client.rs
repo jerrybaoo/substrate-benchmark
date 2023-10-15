@@ -1,9 +1,17 @@
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
+
 use anyhow::Result;
-use log::info;
+use futures::lock::Mutex;
+use log::{error, info};
 
 use subxt::{
-    backend::legacy::LegacyRpcMethods, backend::rpc::RpcClient, client::OnlineClientT,
-    tx::SubmittableExtrinsic, utils::AccountId32, Config, OnlineClient, SubstrateConfig,
+    backend::legacy::LegacyRpcMethods,
+    backend::rpc::RpcClient,
+    client::OnlineClientT,
+    config::substrate::H256,
+    tx::{SubmittableExtrinsic, TxProgress},
+    utils::AccountId32,
+    Config, OnlineClient, SubstrateConfig,
 };
 
 use subxt_signer::sr25519::{Keypair, PublicKey};
@@ -16,11 +24,15 @@ pub mod substrate {}
 #[subxt::subxt(runtime_metadata_path = "metadata/hotstuff_metadata.scale")]
 pub mod substrate {}
 
+use crate::metrics::Metrics;
+
 pub struct Client {
     // send transaction
     api: OnlineClient<SubstrateConfig>,
     // call chain rpc method
-    rpc: LegacyRpcMethods<SubstrateConfig>,
+    _rpc: LegacyRpcMethods<SubstrateConfig>,
+
+    metric: Mutex<Metrics>,
 }
 
 impl Client {
@@ -30,7 +42,11 @@ impl Client {
         let rpc_client = RpcClient::from_url(url).await?;
         let rpc = LegacyRpcMethods::<SubstrateConfig>::new(rpc_client);
 
-        Ok(Self { api, rpc })
+        Ok(Self {
+            api,
+            _rpc: rpc,
+            metric: Mutex::new(Metrics::default()),
+        })
     }
 
     pub async fn charge_balance_to_account(
@@ -99,44 +115,94 @@ impl Client {
         }
 
         // submit_txs_and_wait_finalize(pending_txs).await
-        self.submit_txs_and_wait_the_latest_finalize(pending_txs)
-            .await
+        self.submit_txs_then_watch_head_and_tail(pending_txs).await
     }
 
-    async fn submit_txs_and_wait_the_latest_finalize<T: Config, C: OnlineClientT<T>>(
+    async fn submit_txs_then_watch_head_and_tail<T: Config, C: OnlineClientT<T>>(
         &self,
         txs: Vec<SubmittableExtrinsic<T, C>>,
     ) -> Result<()> {
         let mut num = 0;
-        for (index, transaction) in txs.iter().enumerate() {
-            if index == txs.len() - 1 {
-                break;
-            }
-            match transaction.submit().await {
-                Ok(_msg) => num += 1,
-                Err(e) => {
-                    info!("submit error  {e}");
-                    break;
-                }
-            }
+        let mut first_tx_process: Option<TxProgress<T, C>> = None;
+        let mut last_tx_process: Option<TxProgress<T, C>> = None;
+
+        let begin_send = SystemTime::now().duration_since(UNIX_EPOCH).expect("get system").as_millis() as u64;
+        info!("begin send transaction {}", begin_send);
+        {
+            let mut metric = self.metric.lock().await;
+            metric.set_begin_timestamp(begin_send)
         }
 
-        info!("try send last tx, {}", num);
-        let latest_tx = txs.last().unwrap();
-        loop {
-            match latest_tx.submit_and_watch().await {
-                Ok(process) => {
-                    let wait_res = process.wait_for_finalized().await;
-                    info!(
-                        "last tx has finalize res: {:#?}. process tx:{}",
-                        wait_res.unwrap().block_hash(),
-                        num + 1
-                    );
-                    break;
+        for (index, transaction) in txs.iter().enumerate() {
+            if index == 0 {
+                match transaction.submit_and_watch().await {
+                    Ok(p) => {
+                        first_tx_process = Some(p);
+                        num += 1;
+                    }
+                    Err(e) => error!("submit first tx failed {}", e),
                 }
-                Err(e) => info!("submit_and_watch last tx failed {}", e),
-            };
+            } else if index == txs.len() - 1 {
+                match transaction.submit_and_watch().await {
+                    Ok(p) => {
+                        last_tx_process = Some(p);
+                        num += 1;
+                    }
+                    Err(e) => error!("submit last tx failed {}", e),
+                }
+            } else {
+                match transaction.submit().await {
+                    Ok(_msg) => num += 1,
+                    Err(e) => {
+                        info!("submit error  {e}");
+                        break;
+                    }
+                }
+            }
         }
+        let end_send = SystemTime::now().duration_since(UNIX_EPOCH).expect("get system").as_millis() as u64;
+        info!("end send transaction {}, send txs duration: {}s", end_send, Duration::from_millis(end_send - begin_send).as_secs());
+        info!("has successfully submit txs, num {}", num);
+
+        let first_tx_process = first_tx_process.unwrap();
+        let last_tx_process = last_tx_process.unwrap();
+
+        match first_tx_process.wait_for_finalized().await {
+            Ok(res) => {
+                info!("last tx finalize block at {:#?}", res.block_hash());
+                let mut metric = self.metric.lock().await;
+                let include_block_hash = H256::from_slice(res.block_hash().as_ref());
+                metric.set_begin_block(include_block_hash)
+            }
+            Err(e) => error!("latest tx has error {}", e),
+        }
+
+        match last_tx_process.wait_for_finalized().await {
+            Ok(res) => {
+                info!("last tx finalize block at {:#?}", res.block_hash());
+                let mut metric = self.metric.lock().await;
+                let finalize_end = SystemTime::now().duration_since(UNIX_EPOCH).expect("get system").as_millis() as u64;
+
+                let latest_tx_finalize_hash = H256::from_slice(res.block_hash().as_ref());
+                metric.set_finalize_block(latest_tx_finalize_hash);
+                metric.set_end_timestamp(finalize_end)
+                //let current_block_hash = self.get_current_block().await?;
+
+                // if current_block_hash != latest_tx_finalize_hash {
+                //     info!(
+                //         "the last tx include in block {}, but finalize in {}",
+                //         current_block_hash, latest_tx_finalize_hash
+                //     );
+                //     metric.set_finalize_block(current_block_hash);
+                // } else {
+                //     metric.set_finalize_block(current_block_hash)
+                // }
+            }
+            Err(e) => error!("latest tx has error {}", e),
+        }
+
+        let mut metric = self.metric.lock().await;
+        metric.add_tx_number(num);
 
         Ok(())
     }
@@ -168,6 +234,75 @@ impl Client {
         }
 
         info!("submit_txs_and_wait_finalize done. finalize num {}", num);
+
+        Ok(())
+    }
+
+    async fn get_block_timestamp(&self, block_hash: H256) -> Result<u64> {
+        let block_timestamp_query = substrate::storage().timestamp().now();
+        self.api
+            .storage()
+            .at(block_hash)
+            .fetch(&block_timestamp_query)
+            .await?
+            .ok_or(anyhow::Error::msg(
+                "get current block timestamp should work",
+            ))
+    }
+
+    async fn get_current_block(&self) -> Result<H256> {
+        let hash = self.api.blocks().at_latest().await?.hash();
+        Ok(hash)
+    }
+
+    pub async fn report(&self) -> Result<()> {
+        println!("***** benchmark report *****");
+
+        let metric = self.metric.lock().await;
+        let begin_block_hash = metric.first_tx_begin_block.unwrap();
+        let end_block_hash = metric.last_tx_finalize_block.unwrap();
+        let total_tx = metric.total_tx;
+
+        let begin_time = metric.begin_send; 
+        let finalize_time = metric.finalize_end;
+        // let begin_time = self.get_block_timestamp(begin_block_hash).await?;
+        //let finalize_time = self.get_block_timestamp(end_block_hash).await?;
+
+        let duration = Duration::from_millis(finalize_time - begin_time).as_secs() as u32;
+        let tps = f64::from(total_tx) / f64::from(duration);
+
+        println!(
+            "begin block timestamp: {}. end block timestamp {}. duration {}s. total tx: {}. tps: {}",
+            begin_time, finalize_time, duration, total_tx, tps
+        );
+
+        let mut hash = end_block_hash;
+        let mut block_stats = Vec::new();
+
+        loop {
+            let block = self.api.blocks().at(hash).await?;
+            let block_number = block.header().number;
+            let block_hash = block.hash();
+
+            hash = block.header().parent_hash;
+
+            block_stats.push((
+                block_number,
+                block_hash,
+                self.get_block_timestamp(block_hash).await?,
+                block.extrinsics().await?.len(),
+            ));
+
+            if block_hash == begin_block_hash {
+                break;
+            }
+        }
+
+        for (number, hash, timestamp, tx_size) in block_stats.iter().rev() {
+            println!(
+                "Block #{number}, Hash: {hash}, timestamp: {timestamp},Transaction size: {tx_size}"
+            );
+        }
 
         Ok(())
     }
