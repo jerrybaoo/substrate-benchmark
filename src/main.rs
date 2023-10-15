@@ -29,11 +29,18 @@ async fn main() -> Result<()> {
 
     // default account number is 3.
     let mut account_num: u32 = 3;
+    let mut transaction_num: u32 = 20000;
 
     let args: Vec<String> = env::args().collect();
-    for item in args.iter() {
-        _ = item.parse::<u32>().and_then(|n| {
+    println!("{}", args.len());
+    if args.len() == 3 {
+        let _ = args[1].parse::<u32>().and_then(|n| {
             account_num = n;
+            Ok(())
+        });
+
+        let _ = args[2].parse::<u32>().and_then(|n| {
+            transaction_num = n;
             Ok(())
         });
     }
@@ -61,11 +68,11 @@ async fn main() -> Result<()> {
 
     let mut transfer_task = Vec::new();
 
-    for i in 0..account_num{
+    for i in 0..account_num {
         transfer_task.push(client.batch_balance_transfer(
             &sender_key_pairs[i as usize],
             receiver_key_pairs[i as usize].public_key(),
-            20000,
+            transaction_num,
             TRANSFER_AMOUNT,
         ));
     }
