@@ -1,8 +1,11 @@
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::{
+    collections::HashMap,
+    time::{Duration, SystemTime, UNIX_EPOCH},
+};
 
 use anyhow::Result;
 use futures::lock::Mutex;
-use log::{error, info};
+use log::{debug, error, info};
 
 use subxt::{
     backend::legacy::LegacyRpcMethods,
@@ -265,6 +268,88 @@ impl Client {
     async fn get_current_block(&self) -> Result<H256> {
         let hash = self.api.blocks().at_latest().await?.hash();
         Ok(hash)
+    }
+
+    pub async fn stat_finalize_speed(&self) -> Result<()> {
+        println!("\n begin stats finalize speed");
+
+        let mut best_stat_number = 10;
+        let mut finalize_stat_number = 10;
+
+        let mut best_block_timestamp = HashMap::new();
+        let mut finalize_block_timestamp = HashMap::new();
+
+        let mut best_blocks_sub = self.api.blocks().subscribe_finalized().await?;
+        let mut finalize_blocks_sub = self.api.blocks().subscribe_best().await?;
+
+        futures::future::join(
+            async {
+                while let Some(block) = best_blocks_sub.next().await {
+                    if let Ok(block) = block {
+                        let block_number = block.header().number;
+                        let block_hash = block.hash();
+
+                        debug!(
+                            "#best.. Block #{block_number}, Hash: {block_hash}, Extrinsics size: {}",
+                            block.extrinsics().await.unwrap().len()
+                        );
+
+                        best_block_timestamp.insert(
+                            block_number,
+                            SystemTime::now()
+                                .duration_since(UNIX_EPOCH)
+                                .expect("get system")
+                                .as_millis() as u64,
+                        );
+                        best_stat_number -= 1;
+                        if best_stat_number == 0{
+                            break;
+                        }
+
+                    }
+                }
+            },
+            async {
+                while let Some(block) = finalize_blocks_sub.next().await {
+                    if let Ok(block) = block {
+                        if finalize_stat_number == 0{
+                            break;
+                        }
+                        let block_number = block.header().number;
+                        let block_hash = block.hash();
+
+                        debug!(
+                            "#best.. Block #{block_number}, Hash: {block_hash}, Extrinsics size: {}",
+                            block.extrinsics().await.unwrap().len()
+                        );
+
+                        finalize_block_timestamp.insert(
+                            block_number,
+                            SystemTime::now()
+                                .duration_since(UNIX_EPOCH)
+                                .expect("get system")
+                                .as_millis() as u64,
+                        );
+                        finalize_stat_number -= 1;
+                    }
+                }
+            },
+        )
+        .await;
+
+        let last_finalize_block_number = finalize_block_timestamp.keys().max().unwrap();
+        let begin_finalize_block_number = finalize_block_timestamp.keys().min().unwrap();
+        let diff = finalize_block_timestamp.get(last_finalize_block_number).unwrap() - finalize_block_timestamp.get(begin_finalize_block_number).unwrap();
+        let finalize_duration = Duration::from_millis(diff).as_secs() as u32;
+        let block_count = last_finalize_block_number - begin_finalize_block_number;
+
+        let finalize_block_avg_time = f64::from (finalize_duration)/ f64::from(last_finalize_block_number - begin_finalize_block_number);
+
+        println!();
+        println!("***** report finalize speed *****");
+        println!("finalize stats. time:{}, blocks:{}, avg_time:{}", finalize_duration, block_count, finalize_block_avg_time);
+
+        Ok(())
     }
 
     pub async fn report(&self) -> Result<()> {

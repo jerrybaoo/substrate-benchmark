@@ -32,7 +32,6 @@ async fn main() -> Result<()> {
     let mut transaction_num: u32 = 20000;
 
     let args: Vec<String> = env::args().collect();
-    println!("{}", args.len());
     if args.len() == 3 {
         let _ = args[1].parse::<u32>().and_then(|n| {
             account_num = n;
@@ -80,6 +79,8 @@ async fn main() -> Result<()> {
     futures::future::join_all(transfer_task).await;
 
     client.report().await?;
+
+    client.stat_finalize_speed().await?;
 
     Ok(())
 }
