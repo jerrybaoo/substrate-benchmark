@@ -274,8 +274,8 @@ impl Client {
     pub async fn stat_finalize_speed(&self) -> Result<()> {
         println!("\n begin stats finalize speed");
 
-        let mut best_stat_number = 21;
-        let mut finalize_stat_number = 21;
+        let mut best_stat_number = 22;
+        let mut finalize_stat_number = 22;
 
         let mut best_block_timestamp = HashMap::new();
         let mut finalize_block_timestamp = HashMap::new();
@@ -285,8 +285,14 @@ impl Client {
 
         futures::future::join(
             async {
+                let mut first = true;
                 while let Some(block) = best_blocks_sub.next().await {
                     if let Ok(block) = block {
+                        if first{
+                            first = false;
+                            continue;
+                        }
+
                         let block_number = block.header().number;
                         let block_hash = block.hash();
 
@@ -311,8 +317,14 @@ impl Client {
                 }
             },
             async {
+                let mut first = true;
+
                 while let Some(block) = finalize_blocks_sub.next().await {
                     if let Ok(block) = block {
+                        if first{
+                            first = false;
+                            continue;
+                        }
                         if finalize_stat_number == 0{
                             break;
                         }
