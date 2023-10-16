@@ -1,5 +1,6 @@
 use std::{
     collections::HashMap,
+    sync::Arc,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
@@ -35,11 +36,11 @@ pub struct Client {
     // call chain rpc method
     _rpc: LegacyRpcMethods<SubstrateConfig>,
 
-    metric: Mutex<Metrics>,
+    pub metric: Arc<Mutex<Metrics>>,
 }
 
 impl Client {
-    pub async fn new(url: &str) -> Result<Self> {
+    pub async fn new(url: &str, metric: Arc<Mutex<Metrics>>) -> Result<Self> {
         let api = OnlineClient::<SubstrateConfig>::from_url(url).await?;
 
         let rpc_client = RpcClient::from_url(url).await?;
@@ -48,7 +49,7 @@ impl Client {
         Ok(Self {
             api,
             _rpc: rpc,
-            metric: Mutex::new(Metrics::default()),
+            metric: metric,
         })
     }
 
@@ -273,14 +274,14 @@ impl Client {
     pub async fn stat_finalize_speed(&self) -> Result<()> {
         println!("\n begin stats finalize speed");
 
-        let mut best_stat_number = 10;
-        let mut finalize_stat_number = 10;
+        let mut best_stat_number = 21;
+        let mut finalize_stat_number = 21;
 
         let mut best_block_timestamp = HashMap::new();
         let mut finalize_block_timestamp = HashMap::new();
 
-        let mut best_blocks_sub = self.api.blocks().subscribe_finalized().await?;
-        let mut finalize_blocks_sub = self.api.blocks().subscribe_best().await?;
+        let mut best_blocks_sub = self.api.blocks().subscribe_best().await?;
+        let mut finalize_blocks_sub = self.api.blocks().subscribe_finalized().await?;
 
         futures::future::join(
             async {
@@ -319,7 +320,7 @@ impl Client {
                         let block_hash = block.hash();
 
                         debug!(
-                            "#best.. Block #{block_number}, Hash: {block_hash}, Extrinsics size: {}",
+                            "#finalize.. Block #{block_number}, Hash: {block_hash}, Extrinsics size: {}",
                             block.extrinsics().await.unwrap().len()
                         );
 
@@ -339,15 +340,50 @@ impl Client {
 
         let last_finalize_block_number = finalize_block_timestamp.keys().max().unwrap();
         let begin_finalize_block_number = finalize_block_timestamp.keys().min().unwrap();
-        let diff = finalize_block_timestamp.get(last_finalize_block_number).unwrap() - finalize_block_timestamp.get(begin_finalize_block_number).unwrap();
+        let diff = finalize_block_timestamp
+            .get(last_finalize_block_number)
+            .unwrap()
+            - finalize_block_timestamp
+                .get(begin_finalize_block_number)
+                .unwrap();
         let finalize_duration = Duration::from_millis(diff).as_secs() as u32;
         let block_count = last_finalize_block_number - begin_finalize_block_number;
 
-        let finalize_block_avg_time = f64::from (finalize_duration)/ f64::from(last_finalize_block_number - begin_finalize_block_number);
+        let finalize_block_avg_time = f64::from(finalize_duration)
+            / f64::from(last_finalize_block_number - begin_finalize_block_number);
 
         println!();
         println!("***** report finalize speed *****");
-        println!("finalize stats. time:{}, blocks:{}, avg_time:{}", finalize_duration, block_count, finalize_block_avg_time);
+        println!(
+            "finalize stats. time:{}, blocks:{}, avg_time:{}",
+            finalize_duration, block_count, finalize_block_avg_time
+        );
+
+        println!("***** report finalize speed *****");
+        let mut latency_stat_count = 0;
+        let mut total_finalize_latency = 0;
+        for (number, best_timestamp) in best_block_timestamp.iter() {
+            if let Some(finalize_timestamp) = finalize_block_timestamp.get(number) {
+                if finalize_timestamp > best_timestamp {
+                    let latency = finalize_timestamp - best_timestamp;
+                    total_finalize_latency += latency;
+                    latency_stat_count += 1;
+                    println!(
+                        "block{}, finalize latency:{}s, best timestamp:{}, finalize timestamp:{}",
+                        number,
+                        Duration::from_millis(latency).as_secs(),
+                        best_timestamp,
+                        finalize_timestamp
+                    );
+                }
+            }
+        }
+        let avg_latency = Duration::from_millis(total_finalize_latency).as_millis() as u64
+            / (latency_stat_count as u64);
+        println!(
+            "finalize latency stat count{}, total latency {}, avg_latency {}ms",
+            latency_stat_count, total_finalize_latency, avg_latency
+        );
 
         Ok(())
     }

@@ -1,6 +1,8 @@
-use std::env;
+use std::{env, sync::Arc};
 
 use anyhow::Result;
+use config::*;
+use futures::lock::Mutex;
 use log::debug;
 use subxt::{OnlineClient, SubstrateConfig};
 use subxt_signer::sr25519::{dev, PublicKey};
@@ -19,6 +21,7 @@ mod metrics;
 
 use account::generate_bench_key_pairs;
 use client::Client;
+use metrics::Metrics;
 
 const TOKEN_UNIT: u128 = 1_000_000_000_000u128;
 const TRANSFER_AMOUNT: u128 = 1000;
@@ -27,26 +30,23 @@ const TRANSFER_AMOUNT: u128 = 1000;
 async fn main() -> Result<()> {
     env_logger::init();
 
-    // default account number is 3.
-    let mut account_num: u32 = 3;
-    let mut transaction_num: u32 = 20000;
+    let mut settings = Config::default();
 
-    let args: Vec<String> = env::args().collect();
-    if args.len() == 3 {
-        let _ = args[1].parse::<u32>().and_then(|n| {
-            account_num = n;
-            Ok(())
-        });
+    let config_path = env::var("CONFIG_PATH").unwrap_or("config.toml".to_string());
+    settings.merge(File::with_name(&config_path))?;
 
-        let _ = args[2].parse::<u32>().and_then(|n| {
-            transaction_num = n;
-            Ok(())
-        });
+    let client_urls: Vec<String> = settings.get("client_urls")?;
+    let account_num: u32 = settings.get("account_number")?;
+    let transaction_num: u32 = settings.get("every_account_tx")?;
+
+    let mut clients = Vec::new();
+    let metric = Arc::new(Mutex::new(Metrics::default()));
+    for u in client_urls {
+        let c = Client::new(&u, metric.clone()).await?;
+        clients.push(c);
     }
 
-    let url = "ws://127.0.0.1:9944";
-
-    let client = Client::new(url).await?;
+    let main_client = clients.first().expect("get client");
 
     let from = dev::alice();
     let sender_key_pairs = generate_bench_key_pairs("sender", account_num)?;
@@ -58,17 +58,16 @@ async fn main() -> Result<()> {
         .collect::<Vec<PublicKey>>();
 
     // first, charge balance by sudo.
-    client
+    main_client
         .charge_balance_to_account(&from, &sender_pks, TOKEN_UNIT * 10)
         .await?;
-
-    tokio::spawn(monitor_best_block(url.to_string()));
-    tokio::spawn(monitor_finalize_block(url.to_string()));
 
     let mut transfer_task = Vec::new();
 
     for i in 0..account_num {
-        transfer_task.push(client.batch_balance_transfer(
+        let target_client_index = i as usize % clients.len();
+
+        transfer_task.push(clients[target_client_index].batch_balance_transfer(
             &sender_key_pairs[i as usize],
             receiver_key_pairs[i as usize].public_key(),
             transaction_num,
@@ -78,9 +77,9 @@ async fn main() -> Result<()> {
 
     futures::future::join_all(transfer_task).await;
 
-    client.report().await?;
+    main_client.report().await?;
 
-    client.stat_finalize_speed().await?;
+    main_client.stat_finalize_speed().await?;
 
     Ok(())
 }

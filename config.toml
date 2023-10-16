@@ -1,0 +1,12 @@
+# benchmark config
+client_urls = [
+    "ws://127.0.0.1:9944",
+    "ws://127.0.0.1:9945",
+    "ws://127.0.0.1:9946",
+]
+
+# account number
+account_number = 1
+
+# every will send tx number
+every_account_tx = 20
