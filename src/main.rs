@@ -58,26 +58,26 @@ async fn main() -> Result<()> {
         .collect::<Vec<PublicKey>>();
 
     // first, charge balance by sudo.
-    main_client
-        .charge_balance_to_account(&from, &sender_pks, TOKEN_UNIT * 10)
-        .await?;
+    // main_client
+    //     .charge_balance_to_account(&from, &sender_pks, TOKEN_UNIT * 10)
+    //     .await?;
 
-    let mut transfer_task = Vec::new();
+    // let mut transfer_task = Vec::new();
 
-    for i in 0..account_num {
-        let target_client_index = i as usize % clients.len();
+    // for i in 0..account_num {
+    //     let target_client_index = i as usize % clients.len();
 
-        transfer_task.push(clients[target_client_index].batch_balance_transfer(
-            &sender_key_pairs[i as usize],
-            receiver_key_pairs[i as usize].public_key(),
-            transaction_num,
-            TRANSFER_AMOUNT,
-        ));
-    }
+    //     transfer_task.push(clients[target_client_index].batch_balance_transfer(
+    //         &sender_key_pairs[i as usize],
+    //         receiver_key_pairs[i as usize].public_key(),
+    //         transaction_num,
+    //         TRANSFER_AMOUNT,
+    //     ));
+    // }
 
-    futures::future::join_all(transfer_task).await;
+    // futures::future::join_all(transfer_task).await;
 
-    main_client.report().await?;
+    // main_client.report().await?;
 
     main_client.stat_finalize_speed().await?;
 

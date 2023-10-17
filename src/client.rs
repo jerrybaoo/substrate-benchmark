@@ -274,8 +274,8 @@ impl Client {
     pub async fn stat_finalize_speed(&self) -> Result<()> {
         println!("\n begin stats finalize speed");
 
-        let mut best_stat_number = 22;
-        let mut finalize_stat_number = 22;
+        let mut best_stat_number = 12;
+        let mut finalize_stat_number = 12;
 
         let mut best_block_timestamp = HashMap::new();
         let mut finalize_block_timestamp = HashMap::new();

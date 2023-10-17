@@ -1,0 +1,177 @@
+version: '3'
+services:
+  node1:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    ports:
+      - 30333:30333
+      - 9933:9933
+      - 9944:9944
+      - 9615:9615
+    volumes:
+      - ../substrate_volume/node_1:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork      
+  node2:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_2:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork
+  node3:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_3:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork
+  node4:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_4:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork
+  node5:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_5:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork 
+  node6:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_6:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork 
+  node7:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_7:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork
+  node8:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_8:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork  
+  node9:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_9:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork  
+  node10:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_10:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork  
+  node11:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_11:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork  
+  node12:
+    image: byterui/substrate_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../substrate_volume/node_12:/data
+      - ../substrate_spec:/chain_spec
+    networks:
+      - mynetwork               
+networks:
+  mynetwork:         

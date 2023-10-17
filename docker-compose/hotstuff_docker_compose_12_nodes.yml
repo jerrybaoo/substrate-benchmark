@@ -1,0 +1,177 @@
+version: '3'
+services:
+  node1:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    ports:
+      - 30333:30333
+      - 9933:9933
+      - 9944:9944
+      - 9615:9615
+    volumes:
+      - ../hotstuff_volume/node_1:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork      
+  node2:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_2:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork
+  node3:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_3:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork
+  node4:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_4:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork
+  node5:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_5:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork 
+  node6:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_6:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork 
+  node7:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_7:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork
+  node8:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_8:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork
+  node9:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_9:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork
+  node10:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_10:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork    
+  node11:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_11:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork   
+  node12:
+    image: byterui/hotstuff_node_custom
+    command: ["/usr/bin/run_node.sh", "50"]
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+    volumes:
+      - ../hotstuff_volume/node_12:/data
+      - ../hotstuff_spec:/chain_spec
+    networks:
+      - mynetwork                                                                                         
+networks:
+  mynetwork:         
