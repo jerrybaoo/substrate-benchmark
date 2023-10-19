@@ -9,3 +9,5 @@ account_number = 2
 
 # every will send tx number
 every_account_tx = 20000
+
+stat_tps = true

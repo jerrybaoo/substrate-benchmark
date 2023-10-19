@@ -33,11 +33,13 @@ async fn main() -> Result<()> {
     let mut settings = Config::default();
 
     let config_path = env::var("CONFIG_PATH").unwrap_or("config.toml".to_string());
+    #[allow(deprecated)]
     settings.merge(File::with_name(&config_path))?;
 
     let client_urls: Vec<String> = settings.get("client_urls")?;
     let account_num: u32 = settings.get("account_number")?;
     let transaction_num: u32 = settings.get("every_account_tx")?;
+    let stat_tps = settings.get("stat_tps")?;
 
     let mut clients = Vec::new();
     let metric = Arc::new(Mutex::new(Metrics::default()));
@@ -57,27 +59,29 @@ async fn main() -> Result<()> {
         .map(|k| k.public_key())
         .collect::<Vec<PublicKey>>();
 
-    // first, charge balance by sudo.
-    // main_client
-    //     .charge_balance_to_account(&from, &sender_pks, TOKEN_UNIT * 10)
-    //     .await?;
+    if stat_tps {
+        // first, charge balance by sudo.
+        main_client
+            .charge_balance_to_account(&from, &sender_pks, TOKEN_UNIT * 10)
+            .await?;
 
-    // let mut transfer_task = Vec::new();
+        let mut transfer_task = Vec::new();
 
-    // for i in 0..account_num {
-    //     let target_client_index = i as usize % clients.len();
+        for i in 0..account_num {
+            let target_client_index = i as usize % clients.len();
 
-    //     transfer_task.push(clients[target_client_index].batch_balance_transfer(
-    //         &sender_key_pairs[i as usize],
-    //         receiver_key_pairs[i as usize].public_key(),
-    //         transaction_num,
-    //         TRANSFER_AMOUNT,
-    //     ));
-    // }
+            transfer_task.push(clients[target_client_index].batch_balance_transfer(
+                &sender_key_pairs[i as usize],
+                receiver_key_pairs[i as usize].public_key(),
+                transaction_num,
+                TRANSFER_AMOUNT,
+            ));
+        }
 
-    // futures::future::join_all(transfer_task).await;
+        futures::future::join_all(transfer_task).await;
 
-    // main_client.report().await?;
+        main_client.report().await?;
+    }
 
     main_client.stat_finalize_speed().await?;
 

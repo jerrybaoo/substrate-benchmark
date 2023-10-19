@@ -2,13 +2,15 @@ version: '3'
 services:
   node1:
     image: byterui/hotstuff_node_custom
-    command: ["/usr/bin/run_node.sh", "50"]
+    command: ["/usr/bin/run_node.sh", "0"]
+    environment:
+    - HOTSTUFF_DURATION=1000   
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     ports:
       - 30333:30333
       - 9933:9933
@@ -22,12 +24,14 @@ services:
   node2:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_2:/data
       - ../hotstuff_spec:/chain_spec
@@ -36,12 +40,14 @@ services:
   node3:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_3:/data
       - ../hotstuff_spec:/chain_spec
@@ -50,12 +56,14 @@ services:
   node4:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_4:/data
       - ../hotstuff_spec:/chain_spec
@@ -64,12 +72,14 @@ services:
   node5:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_5:/data
       - ../hotstuff_spec:/chain_spec
@@ -78,12 +88,14 @@ services:
   node6:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_6:/data
       - ../hotstuff_spec:/chain_spec
@@ -92,12 +104,14 @@ services:
   node7:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_7:/data
       - ../hotstuff_spec:/chain_spec
@@ -106,12 +120,14 @@ services:
   node8:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_8:/data
       - ../hotstuff_spec:/chain_spec
@@ -120,12 +136,14 @@ services:
   node9:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_9:/data
       - ../hotstuff_spec:/chain_spec
@@ -134,12 +152,14 @@ services:
   node10:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_10:/data
       - ../hotstuff_spec:/chain_spec
@@ -148,12 +168,14 @@ services:
   node11:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_11:/data
       - ../hotstuff_spec:/chain_spec
@@ -162,12 +184,14 @@ services:
   node12:
     image: byterui/hotstuff_node_custom
     command: ["/usr/bin/run_node.sh", "50"]
+    environment:
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     volumes:
       - ../hotstuff_volume/node_12:/data
       - ../hotstuff_spec:/chain_spec

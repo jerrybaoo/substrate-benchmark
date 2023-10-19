@@ -2,7 +2,7 @@ version: '3'
 services:
   node1:
     image: byterui/substrate_node_custom
-    command: ["/usr/bin/run_node.sh", "50"]
+    command: ["/usr/bin/run_node.sh", "0"]
     cap_add:
     - NET_ADMIN
     deploy:

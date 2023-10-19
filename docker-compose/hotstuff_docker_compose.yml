@@ -2,15 +2,15 @@ version: '3'
 services:
   node1:
     image: byterui/hotstuff_node
-    command: ["/usr/bin/run_node.sh", "alice","100"]
+    command: ["/usr/bin/run_node.sh", "alice","0"]
     environment:
-    - HOTSTUFF_DURATION=1800
+    - HOTSTUFF_DURATION=1000
     cap_add:
     - NET_ADMIN
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     ports:
       - 30333:30333
       - 9933:9933
@@ -20,14 +20,14 @@ services:
       - mynetwork      
   node2:
     image: byterui/hotstuff_node
-    command: ["/usr/bin/run_node.sh", "bob","100"]
+    command: ["/usr/bin/run_node.sh", "bob","50"]
     environment:
-    - HOTSTUFF_DURATION=1800    
+    - HOTSTUFF_DURATION=1000    
     privileged: true
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
     ports:
       - 30334:30333
       - 9934:9933
@@ -37,14 +37,14 @@ services:
       - mynetwork      
   node3:
     image: byterui/hotstuff_node
-    command: ["/usr/bin/run_node.sh", "charlie","100"]
+    command: ["/usr/bin/run_node.sh", "charlie","50"]
     environment:
-    - HOTSTUFF_DURATION=1800    
+    - HOTSTUFF_DURATION=1000    
     privileged: true
     deploy:
       resources:
         limits:
-          cpus: '0.5'    
+          cpus: "0.5"    
     ports:
       - 30335:30333
       - 9935:9933
@@ -54,14 +54,14 @@ services:
       - mynetwork      
   node4:
     image: byterui/hotstuff_node
-    command: ["/usr/bin/run_node.sh", "dave","100"]
+    command: ["/usr/bin/run_node.sh", "dave","0"]
     environment:
-    - HOTSTUFF_DURATION=1800    
+    - HOTSTUFF_DURATION=1000    
     privileged: true
     deploy:
       resources:
         limits:
-          cpus: '0.5'    
+          cpus: "0.5"    
     ports:
       - 30336:30333
       - 9936:9933
@@ -71,14 +71,14 @@ services:
       - mynetwork      
   node5:
     image: byterui/hotstuff_node
-    command: ["/usr/bin/run_node.sh", "eve","100"]
+    command: ["/usr/bin/run_node.sh", "eve","50"]
     environment:
-    - HOTSTUFF_DURATION=1800    
+    - HOTSTUFF_DURATION=1000    
     privileged: true
     deploy:
       resources:
         limits:
-          cpus: '0.5'    
+          cpus: "0.5"    
     ports:
       - 30337:30333
       - 9937:9933
@@ -88,14 +88,14 @@ services:
       - mynetwork      
   node6:
     image: byterui/hotstuff_node
-    command: ["/usr/bin/run_node.sh", "ferdie","100"]
+    command: ["/usr/bin/run_node.sh", "ferdie","50"]
     environment:
-    - HOTSTUFF_DURATION=1800    
+    - HOTSTUFF_DURATION=1000    
     privileged: true
     deploy:
       resources:
         limits:
-          cpus: '0.5'    
+          cpus: "0.5"    
     ports:
       - 30338:30333
       - 9938:9933
