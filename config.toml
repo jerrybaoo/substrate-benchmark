@@ -1,11 +1,17 @@
 # benchmark config
 client_urls = [
     "ws://127.0.0.1:9944",
-    # "ws://127.0.0.1:9945",
+    "ws://127.0.0.1:9945",
+    # "ws://127.0.0.1:9946",
+    # "ws://127.0.0.1:9947",
+    # "ws://127.0.0.1:9948",  
+    # "ws://127.0.0.1:9949",  
 ]
 
 # account number
 account_number = 2
 
 # every will send tx number
-every_account_tx = 20000
+every_account_tx = 40000
+
+stat_tps = true

@@ -1,0 +1,230 @@
+version: '3'
+services:
+  base_node: &base_node
+    image: byterui/hotstuff_node_custom
+    environment:
+    - HOTSTUFF_DURATION=2500   
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+    networks:
+      - mynetwork
+
+  node1: 
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "0"]
+    ports:
+      - 30333:30333
+      - 9933:9933
+      - 9944:9944
+      - 9615:9615
+    volumes:
+      - ../hotstuff_volume/node_1:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node2:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "0"]
+    ports:
+      - 9945:9944    
+    volumes:
+      - ../hotstuff_volume/node_2:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node3:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9946:9944    
+    volumes:
+      - ../hotstuff_volume/node_3:/data
+      - ../hotstuff_spec:/chain_spec
+ 
+  node4:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9947:9944    
+    volumes:
+      - ../hotstuff_volume/node_4:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node5:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9948:9944    
+    volumes:
+      - ../hotstuff_volume/node_5:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node6:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9949:9944    
+    volumes:
+      - ../hotstuff_volume/node_6:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node7:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9950:9944    
+    volumes:
+      - ../hotstuff_volume/node_7:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node8:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9951:9944    
+    volumes:
+      - ../hotstuff_volume/node_8:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node9:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9952:9944    
+    volumes:
+      - ../hotstuff_volume/node_9:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node10:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9953:9944    
+    volumes:
+      - ../hotstuff_volume/node_10:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node11:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9954:9944    
+    volumes:
+      - ../hotstuff_volume/node_11:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node12:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9955:9944   
+    volumes:
+      - ../hotstuff_volume/node_12:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node13:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9956:9944 
+    volumes:
+      - ../hotstuff_volume/node_13:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node14:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9957:9944     
+    volumes:
+      - ../hotstuff_volume/node_14:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node15:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9958:9944  
+    volumes:
+      - ../hotstuff_volume/node_15:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node16:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9959:9944      
+    volumes:
+      - ../hotstuff_volume/node_16:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node17:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9960:9944      
+    volumes:
+      - ../hotstuff_volume/node_17:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node18:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9961:9944      
+    volumes:
+      - ../hotstuff_volume/node_18:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node19:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9962:9944    
+    volumes:
+      - ../hotstuff_volume/node_19:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node20:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9963:9944     
+    volumes:
+      - ../hotstuff_volume/node_20:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node21:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    ports:
+      - 9964:9944      
+    volumes:
+      - ../hotstuff_volume/node_21:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node22:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    volumes:
+      - ../hotstuff_volume/node_22:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node23:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    volumes:
+      - ../hotstuff_volume/node_23:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node24:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "5"]
+    volumes:
+      - ../hotstuff_volume/node_24:/data
+      - ../hotstuff_spec:/chain_spec                        
+
+networks:
+  mynetwork:         

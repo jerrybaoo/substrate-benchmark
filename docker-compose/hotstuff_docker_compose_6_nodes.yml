@@ -1,0 +1,74 @@
+version: '3'
+services:
+  base_node: &base_node
+    image: byterui/hotstuff_node_custom
+    environment:
+    - HOTSTUFF_DURATION=1000   
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+    networks:
+      - mynetwork
+
+  node1: 
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "0"]
+    ports:
+      - 30333:30333
+      - 9933:9933
+      - 9944:9944
+      - 9615:9615
+    volumes:
+      - ../hotstuff_volume/node_1:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node2:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "0"]
+    ports:
+      - 9945:9944    
+    volumes:
+      - ../hotstuff_volume/node_2:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node3:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9946:9944    
+    volumes:
+      - ../hotstuff_volume/node_3:/data
+      - ../hotstuff_spec:/chain_spec
+ 
+  node4:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9947:9944    
+    volumes:
+      - ../hotstuff_volume/node_4:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node5:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9948:9944    
+    volumes:
+      - ../hotstuff_volume/node_5:/data
+      - ../hotstuff_spec:/chain_spec
+
+  node6:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9949:9944    
+    volumes:
+      - ../hotstuff_volume/node_6:/data
+      - ../hotstuff_spec:/chain_spec
+
+networks:
+  mynetwork:         

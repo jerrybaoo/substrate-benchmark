@@ -1,1 +1,9 @@
 /target
+
+log.*
+
+/log
+
+/substrate_volume
+
+/hotstuff_volume
