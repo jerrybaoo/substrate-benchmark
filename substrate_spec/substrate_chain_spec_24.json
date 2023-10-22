@@ -25,7 +25,18 @@
           "5F1Yaoat6SFuZgHw2N9AiQuG7qPqirYp3YWYRNJ3yT4157Vn",
           "5G3ZM1Jx9eGShtkJFX4BRpYnvHX2oCddNVz8JJCxfDVpSEpR",
           "5GYpf7AnjippVLQUpEaTwbZ2iEtxTL6zCJu3japygH7gghm8",
-          "5GGp9FTmApKwr66SP7JD1DsEdRmKsaHQRrcQjQZgBCS62jgT"
+          "5GGp9FTmApKwr66SP7JD1DsEdRmKsaHQRrcQjQZgBCS62jgT",
+          "5H18zH4YYrj7T1WVWU3CJwHBgD2KrBt2rmCgeYqffpMJkTJC",
+          "5H6kQB4tUKgktLKensMuajQJUkCFqRbU9h4rBknjY29Q5uFn",
+          "5ESKdLxJLcYuBzsXa2iNkYJ5yzFNuRxybZ2uQxCRPZ1M677V",
+          "5GuypAwQkoegjfRftR2xDwsUMV2JrV9q9t55voQ3SmSuAUoT",
+          "5EPN2BWtZVHppBaX2hr5W8vrNe26kTXC4GvpHnjJBMckNymT",
+          "5G1wGi9zPjHJGYir9C98CAMnrucrFMRJonxHRuUx2opbuPAN",
+          "5CBFF25jp238s63yaLecJL5LgzaBBcDkH7SgciTiUbSiTy9o",
+          "5CkjY24gEEKCKyFcvteUcp8vPvNBV1p8WB1XSyHmZtoLadSJ",
+          "5GvGkUGCwddMvQbkNxzohSqdfjrRLXMdyfRg3NADU3F88F7j",
+          "5DUBDVyjL6KahrZoLBEWsA7EKtxfxeEWz2fLNxxzPVVfAoDS",
+          "5Gv5sReopgLa8VSuyMAoGx9QivapR1FZxs52mQmJYkthXHey",          "5GvBmF8J7QPLvJSaJQCbjyfnKBMZ5vwibHEb5woVeHbbdtdV"      
         ]
       },
       "grandpa": {
@@ -41,7 +52,19 @@
           ["5DXjuoVz5QsuNmBoTkM462uQG8CKz7sESNnPwYDJUpAvVxJC",1],
           ["5HmRJ9kDnYrQMbKsuhS1UTLbcY4kSWwbQM6yQ4zgNrYVHnMZ",1],
           ["5DwRqYA3rC4pbrMUnGUtXr4JMYvGzkmZ8J3RLQZUPwBAzPX4",1],
-          ["5EMzLskeDAGNh5t6Q98nmTWdVFD24YZQRL4ScNktveDhRqPo",1]
+          ["5EMzLskeDAGNh5t6Q98nmTWdVFD24YZQRL4ScNktveDhRqPo",1],
+          ["5EvDra3CmMLzm7k6Sh9BifgjsYFHa9hM3maTPsbcFy1FeSoW",1],
+          ["5DtRNGMLUfqNYvaqRkGEFioYnnDoKem5uYa2QQYwdLu1bEsx",1],
+          ["5HSp5z2c5AaGYbka8uYVqxTk6CEFY4M6yPsqmPWugVU9rrvM",1],
+          ["5For9ATKYUpRevYnReAKJH6crAvHB5ZzZx1EVDS1JjcwsxsG",1],
+          ["5CBAyJrce8tLUtgJtqQTyi6VLXCMxJSVB51DS4kcbdw3okUE",1],
+          ["5G3pkDkDEJjTkfsQbzbCjfoNr5ZVnrtMXiAFCVUiJsJ2Qh2e",1],
+          ["5Ga4zz75VzWuoY6yWz6bLvw77r1homG4zeULWspUWcSTFZjR",1],
+          ["5EceYm4BVsNDgCKQaENAiZgVfcggHgnrXN7RhQbjD18FcNA3",1],
+          ["5EVLxDj6h11dL6RpCJBhwbkhV2txfN5FCfZHhyjDriMnxsm8",1],
+          ["5EmCcL7bK6dmWLmCJaknUWF3XBmLSj1Ff3BvLqxnFbKv2mB9",1],
+          ["5CKXdj5e5ASs8BSch2k1vE5AAV6uDxXUR4X2AsatVJe3zdFA",1],
+          ["5FhKmuoTvg3zrsqiZZmSsUrvCUez7p4D73aEhf6xnkifLx3m",1]
         ]
       },
       "balances": {

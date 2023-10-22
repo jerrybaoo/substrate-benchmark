@@ -21,3 +21,5 @@ key_generate.sh
 # 清空链 db
 find ./hotstuff_volume/ -type d -name "db" -exec rm -rf {} \;
 
+find ./substrate_volume/ -type d -name "db" -exec rm -rf {} \;
+

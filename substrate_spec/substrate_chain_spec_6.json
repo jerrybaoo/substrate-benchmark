@@ -19,13 +19,7 @@
           "5Cr1XZG9r9vqZfq4dPeoNmbLvUWnpYw2uSWjrM6GKDkcS9Qt",
           "5EJGbzpTsW5P3TFBB8nSamTKRU7AyPJ7KjhGoeRZCWVu75Yn",
           "5Dni4P7U61pCMWPGfyhQuNb3arjrfxrg2DVxVsWN1Gdwsno1",
-          "5Cr7XZB5Xd1fGwcsrn3itgWjhQC7Wa7KRDd6juUgL2wDzxPo",
-          "5CooiXF5jun4xZNzyBzq62SCqmqdxc3WjC84yvAUXe5fKGmD",
-          "5Ehq3NsbSv9gRzayi4fZz46iFzDUcBrkXnWDM5oeKkKzPBHq",
-          "5F1Yaoat6SFuZgHw2N9AiQuG7qPqirYp3YWYRNJ3yT4157Vn",
-          "5G3ZM1Jx9eGShtkJFX4BRpYnvHX2oCddNVz8JJCxfDVpSEpR",
-          "5GYpf7AnjippVLQUpEaTwbZ2iEtxTL6zCJu3japygH7gghm8",
-          "5GGp9FTmApKwr66SP7JD1DsEdRmKsaHQRrcQjQZgBCS62jgT"
+          "5Cr7XZB5Xd1fGwcsrn3itgWjhQC7Wa7KRDd6juUgL2wDzxPo"
         ]
       },
       "grandpa": {
@@ -35,13 +29,7 @@
           ["5DbzWCJUfifBndXoDw8mZ8ZySiYopH88x8pMjA7qtfK6XpUj",1],
           ["5EcLEpwpWL8QySdULDkt6NbMy873hd7BZz91QgEiEtguDM9a",1],
           ["5ECSgJG1itHRq5Y3FVitpiKXhDwzNZrqBEHdfeXYPJLDjxwY",1],
-          ["5Dr6Mqq3zV6yz9VFvevPLU8aYNBvSXnJt5PF8oT1RnfGZ6fR",1],
-          ["5Ezi2zWYed9Cow7vNnDBfojPMvGQ95bWKw3TwbTtj8iLcH2c",1],
-          ["5H2R6CtTT6AQ7QUQeideV2Xbki1yr627JPxuC8Y8jnL9SjJG",1],
-          ["5DXjuoVz5QsuNmBoTkM462uQG8CKz7sESNnPwYDJUpAvVxJC",1],
-          ["5HmRJ9kDnYrQMbKsuhS1UTLbcY4kSWwbQM6yQ4zgNrYVHnMZ",1],
-          ["5DwRqYA3rC4pbrMUnGUtXr4JMYvGzkmZ8J3RLQZUPwBAzPX4",1],
-          ["5EMzLskeDAGNh5t6Q98nmTWdVFD24YZQRL4ScNktveDhRqPo",1]
+          ["5Dr6Mqq3zV6yz9VFvevPLU8aYNBvSXnJt5PF8oT1RnfGZ6fR",1]
         ]
       },
       "balances": {

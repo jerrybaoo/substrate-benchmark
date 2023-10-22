@@ -9,7 +9,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.3"
+          cpus: "0.5"
     networks:
       - mynetwork
 
@@ -27,9 +27,7 @@ services:
 
   node2:
     <<: *base_node
-    command: ["/usr/bin/run_node.sh", "0"]
-    ports:
-      - 9945:9944    
+    command: ["/usr/bin/run_node.sh", "50"]
     volumes:
       - ../hotstuff_volume/node_2:/data
       - ../hotstuff_spec:/chain_spec
@@ -37,8 +35,6 @@ services:
   node3:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9946:9944    
     volumes:
       - ../hotstuff_volume/node_3:/data
       - ../hotstuff_spec:/chain_spec
@@ -46,8 +42,6 @@ services:
   node4:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9947:9944    
     volumes:
       - ../hotstuff_volume/node_4:/data
       - ../hotstuff_spec:/chain_spec
@@ -55,8 +49,6 @@ services:
   node5:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9948:9944    
     volumes:
       - ../hotstuff_volume/node_5:/data
       - ../hotstuff_spec:/chain_spec
@@ -64,8 +56,6 @@ services:
   node6:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9949:9944    
     volumes:
       - ../hotstuff_volume/node_6:/data
       - ../hotstuff_spec:/chain_spec
@@ -73,8 +63,6 @@ services:
   node7:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9950:9944    
     volumes:
       - ../hotstuff_volume/node_7:/data
       - ../hotstuff_spec:/chain_spec
@@ -82,8 +70,6 @@ services:
   node8:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9951:9944    
     volumes:
       - ../hotstuff_volume/node_8:/data
       - ../hotstuff_spec:/chain_spec
@@ -91,8 +77,6 @@ services:
   node9:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9952:9944    
     volumes:
       - ../hotstuff_volume/node_9:/data
       - ../hotstuff_spec:/chain_spec
@@ -100,8 +84,6 @@ services:
   node10:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9953:9944    
     volumes:
       - ../hotstuff_volume/node_10:/data
       - ../hotstuff_spec:/chain_spec
@@ -109,8 +91,6 @@ services:
   node11:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9954:9944    
     volumes:
       - ../hotstuff_volume/node_11:/data
       - ../hotstuff_spec:/chain_spec
@@ -118,8 +98,6 @@ services:
   node12:
     <<: *base_node
     command: ["/usr/bin/run_node.sh", "50"]
-    ports:
-      - 9955:9944   
     volumes:
       - ../hotstuff_volume/node_12:/data
       - ../hotstuff_spec:/chain_spec

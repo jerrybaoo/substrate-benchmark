@@ -90,6 +90,7 @@ impl Client {
 
     pub async fn batch_balance_transfer(
         &self,
+        task_name: String,
         sender: &Keypair,
         receiver: PublicKey,
         tx_number: u32,
@@ -119,11 +120,12 @@ impl Client {
         }
 
         // submit_txs_and_wait_finalize(pending_txs).await
-        self.submit_txs_then_watch_head_and_tail(pending_txs).await
+        self.submit_txs_then_watch_head_and_tail(task_name, pending_txs).await
     }
 
     async fn submit_txs_then_watch_head_and_tail<T: Config, C: OnlineClientT<T>>(
         &self,
+        task_name: String,
         txs: Vec<SubmittableExtrinsic<T, C>>,
     ) -> Result<()> {
         let mut num = 0;
@@ -134,13 +136,16 @@ impl Client {
             .duration_since(UNIX_EPOCH)
             .expect("get system")
             .as_millis() as u64;
-        info!("begin send transaction {}", begin_send);
+        info!("task_name: {}. begin send transaction {}", task_name, begin_send);
         {
             let mut metric = self.metric.lock().await;
             metric.set_begin_timestamp(begin_send)
         }
 
         for (index, transaction) in txs.iter().enumerate() {
+            if index % 500 == 0{
+                info!("task_name: {}. already send {}", task_name, num);
+            }
             if index == 0 {
                 match transaction.submit_and_watch().await {
                     Ok(p) => {
@@ -150,19 +155,21 @@ impl Client {
                     Err(e) => error!("submit first tx failed {}", e),
                 }
             } else if index == txs.len() - 1 {
-                match transaction.submit_and_watch().await {
-                    Ok(p) => {
-                        last_tx_process = Some(p);
-                        num += 1;
+                loop{
+                    match transaction.submit_and_watch().await {
+                        Ok(p) => {
+                            last_tx_process = Some(p);
+                            num += 1;
+                            break;
+                        }
+                        Err(e) => error!("task_name {}, submit last tx failed {}",task_name, e),
                     }
-                    Err(e) => error!("submit last tx failed {}", e),
                 }
             } else {
                 match transaction.submit().await {
                     Ok(_msg) => num += 1,
                     Err(e) => {
-                        info!("submit error  {e}");
-                        break;
+                        info!("task_name:{} ,submit error  {}", task_name, e);
                     }
                 }
             }
@@ -172,11 +179,12 @@ impl Client {
             .expect("get system")
             .as_millis() as u64;
         info!(
-            "end send transaction {}, send txs duration: {}s",
+            "task_name: {}. end send transaction {}, send txs duration: {}s",
+            task_name,
             end_send,
             Duration::from_millis(end_send - begin_send).as_secs()
         );
-        info!("has successfully submit txs, num {}", num);
+        info!("task_name: {}. has successfully submit txs, num {}", task_name,num);
 
         let first_tx_process = first_tx_process.unwrap();
         let last_tx_process = last_tx_process.unwrap();
@@ -187,12 +195,12 @@ impl Client {
                 let include_block_hash = H256::from_slice(res.block_hash().as_ref());
                 metric.set_begin_block(include_block_hash)
             }
-            Err(e) => error!("latest tx has error {}", e),
+            Err(e) => error!("task_name:{}, latest tx has error {}",task_name,e),
         }
 
         match last_tx_process.wait_for_finalized().await {
             Ok(res) => {
-                info!("last tx finalize block at {:#?}", res.block_hash());
+                info!("task_name: {}, last tx finalize block at {:#?}", task_name, res.block_hash());
                 let mut metric = self.metric.lock().await;
                 let finalize_end = SystemTime::now()
                     .duration_since(UNIX_EPOCH)
@@ -202,19 +210,8 @@ impl Client {
                 let latest_tx_finalize_hash = H256::from_slice(res.block_hash().as_ref());
                 metric.set_finalize_block(latest_tx_finalize_hash);
                 metric.set_end_timestamp(finalize_end)
-                //let current_block_hash = self.get_current_block().await?;
-
-                // if current_block_hash != latest_tx_finalize_hash {
-                //     info!(
-                //         "the last tx include in block {}, but finalize in {}",
-                //         current_block_hash, latest_tx_finalize_hash
-                //     );
-                //     metric.set_finalize_block(current_block_hash);
-                // } else {
-                //     metric.set_finalize_block(current_block_hash)
-                // }
             }
-            Err(e) => error!("latest tx has error {}", e),
+            Err(e) => error!("task_name:{} ,latest tx has error {}", task_name, e),
         }
 
         let mut metric = self.metric.lock().await;

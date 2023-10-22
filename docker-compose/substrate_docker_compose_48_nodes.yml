@@ -1,0 +1,373 @@
+version: '3'
+services:
+  base_node: &base_node
+    image: byterui/substrate_node_custom
+    cap_add:
+    - NET_ADMIN
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+    networks:
+      - mynetwork 
+
+  node1:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "0"]
+    ports:
+      - 30333:30333
+      - 9933:9933
+      - 9944:9944
+      - 9615:9615
+    volumes:
+      - ../substrate_volume/node_1:/data
+      - ../substrate_spec:/chain_spec    
+
+  node2:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9945:9944
+    volumes:
+      - ../substrate_volume/node_2:/data
+      - ../substrate_spec:/chain_spec
+
+  node3:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9946:9944    
+    volumes:
+      - ../substrate_volume/node_3:/data
+      - ../substrate_spec:/chain_spec
+
+  node4:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9947:9944    
+    volumes:
+      - ../substrate_volume/node_4:/data
+      - ../substrate_spec:/chain_spec
+
+  node5:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9948:9944    
+    volumes:
+      - ../substrate_volume/node_5:/data
+      - ../substrate_spec:/chain_spec
+
+  node6:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9949:9944    
+    volumes:
+      - ../substrate_volume/node_6:/data
+      - ../substrate_spec:/chain_spec
+
+  node7:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9950:9944    
+    volumes:
+      - ../substrate_volume/node_7:/data
+      - ../substrate_spec:/chain_spec
+
+  node8:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9951:9944    
+    volumes:
+      - ../substrate_volume/node_8:/data
+      - ../substrate_spec:/chain_spec
+
+  node9:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9952:9944    
+    volumes:
+      - ../substrate_volume/node_9:/data
+      - ../substrate_spec:/chain_spec
+
+  node10:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    ports:
+      - 9953:9944    
+    volumes:
+      - ../substrate_volume/node_10:/data
+      - ../substrate_spec:/chain_spec
+
+  node11:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_11:/data
+      - ../substrate_spec:/chain_spec
+
+  node12:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_12:/data
+      - ../substrate_spec:/chain_spec
+
+  node13:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_13:/data
+      - ../substrate_spec:/chain_spec
+
+  node14:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_14:/data
+      - ../substrate_spec:/chain_spec
+
+  node15:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_15:/data
+      - ../substrate_spec:/chain_spec
+
+  node16:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_16:/data
+      - ../substrate_spec:/chain_spec
+  node17:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_17:/data
+      - ../substrate_spec:/chain_spec
+
+  node18:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_18:/data
+      - ../substrate_spec:/chain_spec
+
+  node19:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_19:/data
+      - ../substrate_spec:/chain_spec
+
+  node20:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_20:/data
+      - ../substrate_spec:/chain_spec
+
+  node21:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_21:/data
+      - ../substrate_spec:/chain_spec   
+
+  node22:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_22:/data
+      - ../substrate_spec:/chain_spec   
+
+  node23:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_23:/data
+      - ../substrate_spec:/chain_spec 
+
+  node24:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_24:/data
+      - ../substrate_spec:/chain_spec    
+
+  node25:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_25:/data
+      - ../substrate_spec:/chain_spec 
+
+  node26:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_26:/data
+      - ../substrate_spec:/chain_spec 
+
+  node27:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_27:/data
+      - ../substrate_spec:/chain_spec 
+
+  node28:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_28:/data
+      - ../substrate_spec:/chain_spec 
+
+  node29:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_29:/data
+      - ../substrate_spec:/chain_spec
+
+  node30:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_30:/data
+      - ../substrate_spec:/chain_spec 
+
+  node31:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_31:/data
+      - ../substrate_spec:/chain_spec 
+
+  node32:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_32:/data
+      - ../substrate_spec:/chain_spec 
+
+  node33:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_33:/data
+      - ../substrate_spec:/chain_spec  
+
+  node34:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_34:/data
+      - ../substrate_spec:/chain_spec 
+
+  node35:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_35:/data
+      - ../substrate_spec:/chain_spec        
+
+  node36:
+    <<: *base_node
+    command: ["/usr/bin/run_node.sh", "50"]
+    volumes:
+      - ../substrate_volume/node_36:/data
+      - ../substrate_spec:/chain_spec
+          
+  # node37:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_37:/data
+  #     - ../substrate_spec:/chain_spec                                      
+
+  # node38:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_38:/data
+  #     - ../substrate_spec:/chain_spec 
+
+  # node39:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_39:/data
+  #     - ../substrate_spec:/chain_spec 
+
+  # node40:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_40:/data
+  #     - ../substrate_spec:/chain_spec 
+
+  # node41:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_41:/data
+  #     - ../substrate_spec:/chain_spec
+
+  # node42:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_42:/data
+  #     - ../substrate_spec:/chain_spec 
+
+  # node43:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_43:/data
+  #     - ../substrate_spec:/chain_spec 
+
+  # node44:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_44:/data
+  #     - ../substrate_spec:/chain_spec 
+
+  # node45:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_45:/data
+  #     - ../substrate_spec:/chain_spec  
+
+  # node46:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_46:/data
+  #     - ../substrate_spec:/chain_spec  
+
+  # node47:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_47:/data
+  #     - ../substrate_spec:/chain_spec
+          
+  # node48:
+  #   <<: *base_node
+  #   command: ["/usr/bin/run_node.sh", "50"]
+  #   volumes:
+  #     - ../substrate_volume/node_48:/data
+  #     - ../substrate_spec:/chain_spec 
+
+networks:
+  mynetwork:         

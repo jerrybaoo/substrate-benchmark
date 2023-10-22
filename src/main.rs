@@ -62,7 +62,7 @@ async fn main() -> Result<()> {
     if stat_tps {
         // first, charge balance by sudo.
         main_client
-            .charge_balance_to_account(&from, &sender_pks, TOKEN_UNIT * 10)
+            .charge_balance_to_account(&from, &sender_pks, TOKEN_UNIT * 10000000)
             .await?;
 
         let mut transfer_task = Vec::new();
@@ -71,6 +71,7 @@ async fn main() -> Result<()> {
             let target_client_index = i as usize % clients.len();
 
             transfer_task.push(clients[target_client_index].batch_balance_transfer(
+                format!("task_{}", i),
                 &sender_key_pairs[i as usize],
                 receiver_key_pairs[i as usize].public_key(),
                 transaction_num,
@@ -83,7 +84,7 @@ async fn main() -> Result<()> {
         main_client.report().await?;
     }
 
-    main_client.stat_finalize_speed().await?;
+   // main_client.stat_finalize_speed().await?;
 
     Ok(())
 }

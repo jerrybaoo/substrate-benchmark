@@ -34,72 +34,30 @@ services:
 
   node3:
     <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25",]
+    command: ["/usr/bin/run_node.sh", "50"]
     volumes:
       - ../substrate_volume/node_3:/data
       - ../substrate_spec:/chain_spec
 
   node4:
     <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
+    command: ["/usr/bin/run_node.sh", "50"]
     volumes:
       - ../substrate_volume/node_4:/data
       - ../substrate_spec:/chain_spec
 
   node5:
     <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
+    command: ["/usr/bin/run_node.sh", "50"]
     volumes:
       - ../substrate_volume/node_5:/data
       - ../substrate_spec:/chain_spec
 
   node6:
     <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
+    command: ["/usr/bin/run_node.sh", "50"]
     volumes:
       - ../substrate_volume/node_6:/data
-      - ../substrate_spec:/chain_spec
-
-  node7:
-    <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
-    volumes:
-      - ../substrate_volume/node_7:/data
-      - ../substrate_spec:/chain_spec
-
-  node8:
-    <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
-    volumes:
-      - ../substrate_volume/node_8:/data
-      - ../substrate_spec:/chain_spec
-
-  node9:
-    <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
-    volumes:
-      - ../substrate_volume/node_9:/data
-      - ../substrate_spec:/chain_spec
-
-  node10:
-    <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
-    volumes:
-      - ../substrate_volume/node_10:/data
-      - ../substrate_spec:/chain_spec
-
-  node11:
-    <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
-    volumes:
-      - ../substrate_volume/node_11:/data
-      - ../substrate_spec:/chain_spec
-
-  node12:
-    <<: *base_node
-    command: ["/usr/bin/run_node.sh", "25"]
-    volumes:
-      - ../substrate_volume/node_12:/data
       - ../substrate_spec:/chain_spec
 
 networks:
